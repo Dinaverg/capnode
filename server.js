@@ -3,7 +3,16 @@ const app = express();
 
 app.use(express.static('public'));
 
-//app.listen(process.env.PORT || 8080);
+app.get('/', function(req, res) {
+    res.status(200)
+})
+
+app.get('/login', function(req, res) {
+    res.status(200)
+})
+
+
+
 
 let server
 
