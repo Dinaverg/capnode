@@ -1,2 +1,9 @@
 language: node_js
 node_js: node
+deploy:
+  provider: heroku
+  api_key:
+    secure: XfwlY0j91YKuD2rAOyBCo98pEjRtTCda8orFx+PobxUO1OmsMGlKP01RQ4vqHex6uJ5DSPyDG5aofows0vl5vEhpgvzn7NhyI1qbP1bHlpVzWWZujpAlTQmvxUSRuOWfnppEU3s5gElFV0Qin1UemFgbQZwDwEMJlY+pK1ZCivrL9DYDZPXxPY7UVxK32XBmLnQBRX8ewBIqPlhw8QtWT7R8r6tNDs74dY+XtpOJBgdC9+OiokR+OzZTh0YIjzo88fAgoKm0R3S/qX9CBRI5MytNwxcs4lc05r3JLPKE1IMfE+AA+7ZrrA9Xbv0ppjFbXk929ekErLD1VIwRF+wEEwD/f8X73lAfWf47tn9opZoEZOWwemV7f4sIzXrzQNiM4bhUjAdUFi9AKxHdp30wKWFuP/pJqO/7sQSwOxbowkiuIUGdGrDTFKRLl8phjbM4ze1bFMJYuR7dc0GgFysLLrOoc4kIFgGuBPdhkdaR7hQaiT9Q/GJ7ib19LOhc/RaTN9RDdQmUkErs3oGci16z5oKkFXtNfe1fE7rhMwHurzKNIuCDR8eY2zndgXLVDUH6LbqHamK1Ds1S/ExTo/f+oc9d8VgrGdlMUq78A9EqXXRYuhx5f2xjWEII8T7mj3u94wNXUVFzASbUvwKsPX5Fd9TZl+9gCf3br/pLZdH+y7I=
+  app: https://desolate-gorge-89847.herokuapp.com/ 
+  on:
+    repo: Dinaverg/capnode
