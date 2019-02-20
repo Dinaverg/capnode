@@ -20,8 +20,8 @@
             <form id='example-form'>
                 <div class='sidepanel-input-group'>
                     <select id='tomtom-example-searchesList'>
-                        <option value='fuzzySearch' selected>Fuzzy search</option>
-                        <option value='poiSearch'>POI search</option>
+                        <option value='fuzzySearch'>Fuzzy search</option>
+                        <option value='poiSearch' selected>POI search</option>
                         <option value='categorySearch'>Category search</option>
                         <option value='geometrySearch' title='Geometry search'>Geometry search</option>
                         <option value='nearbySearch' title='Nearby search'>Nearby search</option>
@@ -29,10 +29,6 @@
                     </select>
                     <label for='tomtom-example-searchesList'>Type</label>
                 </div>
-                <div class='sidepanel-input-group' id='tomtom-language-selector-placeholder'>
-                    <label for='tomtom-example-langCodesList'>Language</label>
-                </div>
-                <div class='sidepanel-input-group' id='tomtom-geopol-selector-placeholder'></div>
                 <div id='queryParam' class='sidepanel-input-group'>
                     <input type='text' id='query' name='query' placeholder='Search for (e.g. pizza)...' pattern='.+' title='this field is required'
                         required>
@@ -82,11 +78,11 @@
             // Define your product name and version
             tomtom.setProductInfo('<your-product-name>', '<your-product-version>');
             // Setting TomTom keys
-            tomtom.searchKey('<your-tomtom-search-API-key>');
+            tomtom.searchKey('u6THGRqXu1xJyUojMIeEh3AwfMxR3aG5');
 
             // Creating map
             var map = tomtom.L.map('map', {
-                key: '<your-tomtom-API-key>',
+                key: 'u6THGRqXu1xJyUojMIeEh3AwfMxR3aG5',
                 source: 'vector',
                 basePath: '<your-tomtom-sdk-base-path>'
             }).setView([51.49912573429843, -0.12582778930664062], 6);
