@@ -1,3 +1,4 @@
+const path = require('path');
 const express = require('express');
 const app = express();
 
@@ -11,6 +12,9 @@ app.get('/login', function(req, res) {
     res.status(200)
 })
 
+app.get('/map', function(req, res) {
+  res.sendFile(path.join(__dirname+'/public/map.html'));
+})
 
 
 
