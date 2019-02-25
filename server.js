@@ -1,19 +1,19 @@
-const path = require('path');
-const express = require('express');
-const app = express();
+let path = require('path');
+let express = require('express');
+let app = express();
 
 app.use(express.static('public'));
 
 app.get('/', function(req, res) {
-    res.status(200)
+  res.status(200)
 })
 
 app.get('/login', function(req, res) {
-    res.status(200)
+  res.status(200)
 })
 
-app.get('/map', function(req, res) {
-  res.sendFile(path.join(__dirname+'/public/map.html'));
+app.get('/search', function(req, res) {
+  console.log(req.params)
 })
 
 
@@ -21,34 +21,34 @@ app.get('/map', function(req, res) {
 let server
 
 function runServer() {
-    const port = process.env.PORT || 8080;
-    return new Promise((resolve, reject) => {
-      server = app
-        .listen(port, () => {
-          console.log(`Your app is listening on port ${port}`);
-          resolve(server);
-        })
-        .on("error", err => {
-          reject(err);
-        });
+  const port = process.env.PORT || 8080;
+  return new Promise((resolve, reject) => {
+    server = app
+    .listen(port, () => {
+      console.log(`Your app is listening on port ${port}`);
+      resolve(server);
+    })
+    .on("error", err => {
+      reject(err);
     });
-  }
+  });
+}
 
 function closeServer() {
-    return new Promise((resolve, reject) => {
-      console.log("Closing server");
-      server.close(err => {
-        if (err) {
-          reject(err);
-          return;
-        }
-        resolve();
-      });
+  return new Promise((resolve, reject) => {
+    console.log("Closing server");
+    server.close(err => {
+      if (err) {
+        reject(err);
+        return;
+      }
+      resolve();
     });
-  }
+  });
+}
 
 if (require.main === module) {
-    runServer().catch(err => console.error(err));
+  runServer().catch(err => console.error(err));
 }
 
 module.exports = {app, runServer, closeServer}
