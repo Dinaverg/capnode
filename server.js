@@ -74,14 +74,17 @@ app.get('/search', function(req, res) {
 })
 
 function getCityId(obj) {
+  console.log(JSON.stringify(obj))
   let url = `https://developers.zomato.com/api/v2.1/cities?lat=${obj.latitude}&lon=${obj.longitude}`
+  console.log(url)
   fetch(url, {
     headers: {
       "user-key": "5bd03d09c51a0f6f196ea401d3ae98c1"
     }
   })
-  .then(Response => getRestaurants(Response.body))
-  .catch(console.log('double berf'))
+  .then(response => {response.json()})
+  .then(responseJson => {console.log(responseJson); return getRestaurants(responseJson)})
+  .catch(err => console.error(err))
   
 }
 
