@@ -2,8 +2,8 @@ function searchPOI() {
     $('form').submit(event => {
         event.preventDefault()
         let query = $("#input").val()
-        let url = `https://desolate-gorge-89847.herokuapp.com/search?=${query}`
-        fetch(`localhost:8080/search?=${query}`)
+        //let url = `https://desolate-gorge-89847.herokuapp.com/search?location=${query}`
+        fetch(`/search?location=${query}`)
             .then(response => {
                 if (response.ok) {
                     return response.json()
