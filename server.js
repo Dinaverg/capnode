@@ -31,7 +31,7 @@ app.get('/search', function(req, res) {
     })
     let stateSet = new Set(result.map(x => x.adminCode))
     if (result.length == 1) {
-      getCityId({
+      getRestaurants({
         latitude: result[0].latitude,
         longitude: result[0].longitude
       })
@@ -43,7 +43,7 @@ app.get('/search', function(req, res) {
       //bad request, misspelled, no city exists
     } else if (stateSet.size == 1) {
       console.log('three')
-      getCityId({
+      getRestaurants({
         latitude: result[0].latitude,
         longitude: result[0].longitude
       })
@@ -55,7 +55,7 @@ app.get('/search', function(req, res) {
         //cities by population, maxpop sshould be an object      
       })
       //console.log(maxPop)
-      getCityId({
+      getRestaurants({
         latitude: maxPop.lat,
         longitude: maxPop.lon
       })
@@ -66,31 +66,72 @@ app.get('/search', function(req, res) {
   } else {
     let place = zipcodes.lookup(req.query.location)
     console.log(place)
-    getCityId({
+    getRestaurants({
       latitude: place.latitude,
       longitude: place.longitude
-    })
+    }, res) 
+        //res.set('user-key', '5bd03d09c51a0f6f196ea401d3ae98c1')
   }
 })
 
-function getCityId(obj) {
+function getRestaurants(obj, res) {
   console.log(JSON.stringify(obj))
-  let url = `https://developers.zomato.com/api/v2.1/cities?lat=${obj.latitude}&lon=${obj.longitude}`
-  console.log(url)
+  let url = `https://developers.zomato.com/api/v2.1/search?lat=${obj.latitude}&lon=${obj.longitude}`
   fetch(url, {
     headers: {
       "user-key": "5bd03d09c51a0f6f196ea401d3ae98c1"
     }
   })
-  .then(response => {response.json()})
-  .then(responseJson => {console.log(responseJson); return getRestaurants(responseJson)})
+  .then(response => response.json())
+  .then(responseJson => showRestaurantData(responseJson, res))
   .catch(err => console.error(err))
-  
 }
 
-function getRestaurants(obj) {
-  console.log(obj)  //.location_suggestions[0].id
+function showRestaurantData(json, res) {
+  console.log(json.restaurants[0].restaurant)
+  let sum = []
+  for (let i = 0; i < json.restaurants.length; i++) {
+    sum.push({
+      id: json.restaurants[i].restaurant.id,
+      name: json.restaurants[i].restaurant.name,
+      url: json.restaurants[i].restaurant.url,
+      address: json.restaurants[i].restaurant.location.address,
+      cuisines: json.restaurants[i].restaurant.cuisines,
+      user_rating: json.restaurants[i].restaurant.user_rating.rating_text
+    })
+  }
+  res.send(sum)
 }
+
+/* function getRestaurants(obj, res) {
+  console.log(obj)  
+  let ResgetRestaurants = obj.location_suggestions[0].id
+  let url = `https://developers.zomato.com/api/v2.1/search?entity_type=zone&entity_id=${ResgetRestaurants}`
+  fetch(url, {
+    headers: {
+      "user-key": "5bd03d09c51a0f6f196ea401d3ae98c1"
+    }
+  })
+  .then(response => response.json())
+  .then(responseJson => res.send(responseJson))
+  .catch(err => console.error(err))
+} */
+
+/* function getRestaurants(obj) {
+  let url = `https://developers.zomato.com/api/v2.1/search?lat=${obj.latitude}&lon=${obj.longitude}`
+  fetch(url, {
+    headers: {
+      "user-key": "5bd03d09c51a0f6f196ea401d3ae98c1"
+    }
+  })
+  .then(response => response.json())
+  .then(responseJson => sendZomatoData(responseJson))
+  .catch(err => console.error(err))
+}
+
+function sendZomatoData(obj) {
+  return obj
+} */
 
 
 let server
