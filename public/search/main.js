@@ -21,7 +21,7 @@ function renderResponse(arr) {
     console.log(arr);
     let sum = ``
     for (let i=0; i < arr.length; i++) {
-        sum += `<p><a href=${arr[i].url}>${arr[i].name}</a><br>${arr[i].cuisines}</p>`
+        sum += `<p class="col-3"><a href=${arr[i].url}>${arr[i].name}</a><br>${arr[i].cuisines}</p>`
     }
     $(".results").append(sum)
 }

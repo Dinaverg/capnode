@@ -103,37 +103,6 @@ function showRestaurantData(json, res) {
   res.send(sum)
 }
 
-/* function getRestaurants(obj, res) {
-  console.log(obj)  
-  let ResgetRestaurants = obj.location_suggestions[0].id
-  let url = `https://developers.zomato.com/api/v2.1/search?entity_type=zone&entity_id=${ResgetRestaurants}`
-  fetch(url, {
-    headers: {
-      "user-key": "5bd03d09c51a0f6f196ea401d3ae98c1"
-    }
-  })
-  .then(response => response.json())
-  .then(responseJson => res.send(responseJson))
-  .catch(err => console.error(err))
-} */
-
-/* function getRestaurants(obj) {
-  let url = `https://developers.zomato.com/api/v2.1/search?lat=${obj.latitude}&lon=${obj.longitude}`
-  fetch(url, {
-    headers: {
-      "user-key": "5bd03d09c51a0f6f196ea401d3ae98c1"
-    }
-  })
-  .then(response => response.json())
-  .then(responseJson => sendZomatoData(responseJson))
-  .catch(err => console.error(err))
-}
-
-function sendZomatoData(obj) {
-  return obj
-} */
-
-
 let server
 
 function runServer() {
