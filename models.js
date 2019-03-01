@@ -1,4 +1,6 @@
+let bcrypt = require('bcryptjs')
 let mongoose = require("mongoose")
+
 mongoose.Promise = global.Promise
 
 let restaurantSchema = mongoose.Schema({
@@ -10,11 +12,16 @@ let restaurantSchema = mongoose.Schema({
 })
 
 let userSchema = mongoose.Schema({
-    firstName: 'string',
-    lastName: 'string',
+    firstName: {type: String, default: 'X'},
+    lastName: {type: String, default: 'X'},
     userName: {
         type: 'string',
+        required: true,
         unique: true
+    },
+    password: {
+        type: 'string',
+        required: true
     },
     JWT: 'string',
     beenTo: [restaurantSchema],
@@ -33,6 +40,15 @@ userSchema.methods.serialize = function() {
       toGoTo: this.toGoTo.length
     }
   }
+
+userSchema.methods.validatePassword = function(password) {
+    return bcrypt.compare(password, this.password);
+};
+  
+UserSchema.statics.hashPassword = function(password) {
+    return bcrypt.hash(password, 10);
+}
+
 let Restaurant = mongoose.model('Restaurant', restaurantSchema)
 let User = mongoose.model('User', userSchema)
 

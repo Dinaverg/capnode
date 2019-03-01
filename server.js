@@ -4,9 +4,17 @@ let zipcodes = require('zipcodes')
 let cities = require('cities')
 let cityPop = require('all-the-cities')
 let fetch = require('node-fetch')
+let mongoose = require('mongoose')
+let morgan = require('morgan')
+let passport = require('passport')
+
+//const { router: usersRouter } = require('./users');
+//const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
+
 
 let app = express();
 
+app.use(morgan('common'))
 app.use(express.static('public'));
 /* app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
