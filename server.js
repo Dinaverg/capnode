@@ -8,9 +8,11 @@ let mongoose = require('mongoose')
 let morgan = require('morgan')
 let passport = require('passport')
 
-//const { router: usersRouter } = require('./users');
-//const { router: authRouter, localStrategy, jwtStrategy } = require('./auth');
+let {DATABASE_URL} = require('./config');
+let userrouter = require('./userrouter');
+let {router: authrouter, localStrategy, jwtStrategy } = require('./auth');
 
+mongoose.Promise = global.Promise
 
 let app = express();
 
@@ -21,6 +23,11 @@ app.use(express.static('public'));
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 }); */
+
+passport.use(localStrategy);
+passport.use(jwtStrategy);
+
+app.use('/users', userrouter)
 
 app.get('/', function(req, res) {
   res.status(200)
@@ -116,6 +123,11 @@ let server
 function runServer() {
   const port = process.env.PORT || 8080;
   return new Promise((resolve, reject) => {
+    mongoose.connect(DATABASE_URL, {useNewUrlParser: true}, err => {
+      if (err) {
+        return reject(err)
+      }
+    })
     server = app
     .listen(port, () => {
       console.log(`Your app is listening on port ${port}`);

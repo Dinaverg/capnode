@@ -4,17 +4,13 @@ body {
     font-size: 18px;
 }
 
-header {
-    
-}
-
 .logo {
     width: 100%;
 }
 
 img {
     display: block;
-    height: 35px;
+    height: 220px;
     width: auto;
     margin-left: auto;
     margin-right: auto;

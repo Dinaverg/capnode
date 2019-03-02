@@ -7,7 +7,7 @@ let router = express.Router()
 
 let jsonParser = bodyparser.json()
 
-router.post('/', jsonParser, (req, res) => {
+router.post('/signup', jsonParser, (req, res) => {
     const requiredFields = ['username', 'password'];
     const missingField = requiredFields.find(field => !(field in req.body));
   
@@ -60,9 +60,7 @@ router.post('/', jsonParser, (req, res) => {
         min: 1
       },
       password: {
-        min: 10,
-        // bcrypt truncates after 72 characters, so let's not give the illusion
-        // of security by storing extra (unused) info
+        min: 6,
         max: 72
       }
     };
@@ -95,6 +93,8 @@ router.post('/', jsonParser, (req, res) => {
     // before this
     firstName = firstName.trim();
     lastName = lastName.trim();
+    console.log('here?')
+    console.log(req.body)
   
     return User.find({username})
       .count()
@@ -142,4 +142,4 @@ router.post('/', jsonParser, (req, res) => {
       .catch(err => res.status(500).json({message: 'Internal server error'}));
   });
   
-  module.exports = {router};
+  module.exports = router

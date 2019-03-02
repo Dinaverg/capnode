@@ -8,17 +8,19 @@ let restaurantSchema = mongoose.Schema({
     cuisines: 'string',
     name: 'string',
     rating: 'string',
-    restId: 'string'
+    restId: 'string',
+    saved: {type: 'date', default: Date.now()}
 })
 
 let userSchema = mongoose.Schema({
-    firstName: {type: String, default: 'X'},
-    lastName: {type: String, default: 'X'},
+    firstName: {type: 'string', default: ''},
+    lastName: {type: 'string', default: ''},
     userName: {
         type: 'string',
         required: true,
         unique: true
     },
+    email: 'string',
     password: {
         type: 'string',
         required: true
@@ -45,7 +47,7 @@ userSchema.methods.validatePassword = function(password) {
     return bcrypt.compare(password, this.password);
 };
   
-UserSchema.statics.hashPassword = function(password) {
+userSchema.statics.hashPassword = function(password) {
     return bcrypt.hash(password, 10);
 }
 
