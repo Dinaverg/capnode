@@ -123,37 +123,43 @@ let server
 function runServer() {
   const port = process.env.PORT || 8080;
   return new Promise((resolve, reject) => {
+    mongoose.set('debug', true);
     mongoose.connect(DATABASE_URL, {useNewUrlParser: true}, err => {
       if (err) {
         return reject(err)
       }
     })
+    console.log(`connected to database at ${DATABASE_URL}`)
     server = app
     .listen(port, () => {
       console.log(`Your app is listening on port ${port}`);
       resolve(server);
     })
     .on("error", err => {
+      console.log('error thrown')
+      mongoose.disconnect()
       reject(err);
     });
   });
 }
 
 function closeServer() {
-  return new Promise((resolve, reject) => {
-    console.log("Closing server");
-    server.close(err => {
-      if (err) {
-        reject(err);
-        return;
-      }
-      resolve();
+  return mongoose.disconnect().then(() => {
+    return new Promise((resolve, reject) => {
+      console.log("Closing server");
+      server.close(err => {
+        if (err) {
+          reject(err);
+          return;
+        }
+        resolve();
+      });
     });
-  });
+  })
 }
 
 if (require.main === module) {
-  runServer().catch(err => console.error(err));
+  runServer(DATABASE_URL).catch(err => console.error(err));
 }
 
 module.exports = {app, runServer, closeServer}

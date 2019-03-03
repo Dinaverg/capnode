@@ -15,7 +15,7 @@ let restaurantSchema = mongoose.Schema({
 let userSchema = mongoose.Schema({
     firstName: {type: 'string', default: ''},
     lastName: {type: 'string', default: ''},
-    userName: {
+    username: {
         type: 'string',
         required: true,
         unique: true
@@ -37,7 +37,7 @@ userSchema.virtual("fullName").get(function() {
 
 userSchema.methods.serialize = function() {
     return {
-      name: this.fullname,
+      name: this.fullName,
       beenTo: this.beenTo.length,
       toGoTo: this.toGoTo.length
     }

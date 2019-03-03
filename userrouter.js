@@ -1,7 +1,7 @@
 let express = require('express')
 let bodyparser = require('body-parser')
 
-let {User} = require('./models')
+let {Restaurant, User} = require('./models')
 
 let router = express.Router()
 
@@ -88,17 +88,17 @@ router.post('/signup', jsonParser, (req, res) => {
       });
     }
   
-    let {username, password, firstName = '', lastName = ''} = req.body;
+    let {username, password, email, firstName = '', lastName = ''} = req.body;
     // Username and password come in pre-trimmed, otherwise we throw an error
     // before this
     firstName = firstName.trim();
     lastName = lastName.trim();
     console.log('here?')
-    console.log(req.body)
-  
-    return User.find({username})
-      .count()
+
+    User.find({username})
+      .countDocuments()
       .then(count => {
+        console.log(count)
         if (count > 0) {
           // There is an existing user with the same username
           return Promise.reject({
@@ -112,14 +112,17 @@ router.post('/signup', jsonParser, (req, res) => {
         return User.hashPassword(password);
       })
       .then(hash => {
+        console.log(hash)
         return User.create({
           username,
           password: hash,
+          email,
           firstName,
           lastName
         });
       })
       .then(user => {
+        console.log(user)
         return res.status(201).json(user.serialize());
       })
       .catch(err => {
@@ -128,7 +131,7 @@ router.post('/signup', jsonParser, (req, res) => {
         if (err.reason === 'ValidationError') {
           return res.status(err.code).json(err);
         }
-        res.status(500).json({code: 500, message: 'Internal server error'});
+        res.status(500).json({code: 500, message: 'Internal serverr error'});
       });
   });
   
@@ -137,7 +140,8 @@ router.post('/signup', jsonParser, (req, res) => {
   // if we're creating users. keep in mind, you can also
   // verify this in the Mongo shell.
   router.get('/', (req, res) => {
-    return User.find()
+    console.log('get users')
+    User.find()
       .then(users => res.json(users.map(user => user.serialize())))
       .catch(err => res.status(500).json({message: 'Internal server error'}));
   });

@@ -1,8 +1,34 @@
+'use strict'
+
 function signup() {
-    $('form').ajaxForm(function() {
-        console.log('submitted')
-    })
+    $('form').submit(event => {
+        event.preventDefault()
+        let first = $('#first').val()
+        let last = $('#last').val()
+        let user = $('#user').val()
+        let email = $('#email').val() 
+        let pass = $('#pass').val();
+        console.log(user)
+        fetch('/users/signup', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                firstName: first,
+                lastName: last,
+                username: user,
+                email: email,
+                password: pass
+                })
+            })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(err => console.error(err))
+    });
 }
+
 
 function renderResponse(arr) {
     $(".results").empty()
