@@ -18,31 +18,43 @@
     </header>
     <main role="main">
         <div>
-            <form role="form" type= method="POST">
+            <form role="form" class="signup" method="POST">
                 <h1>Sign up</h1>
                 <fieldset>
                     <label><p>First name</p>
                         <input type="text" id="first" required/>
-                    </label><br>
+                    </label>
                     <label><p>Last name</p>
                         <input type="text" id="last" required/>
-                    </label><br>
+                    </label>
                     <label><p>Username</p>
-                        <input type="text" id="user" required/>
-                    </label><br>
+                        <input type="text" id="newuser" autocomplete="username" required/>
+                    </label>
                     <label><p>Email</p>
                         <input type="email" id="email" required/>
-                    </label><br>
+                    </label>
                     <label><p>Password</p>
-                        <input type="password" id="pass" required/>
+                        <input type="password" id="newpass" autocomplete="new-password" required/>
                     </label><br>
                     <button type="submit">Sign up</button>
+                </fieldset>
+            </form>
+            <form role="form" class="login" method="POST">
+                <h1>Log in</h1>
+                <fieldset>
+                    <label><p>Username</p>
+                        <input type="text" id="user" autocomplete="username" required/>
+                    </label>
+                    <label><p>Password</p>
+                        <input type="password" id="pass" autocomplete="current-password">
+                    </label><br>
+                    <button type="submit">Log in</button>
                 </fieldset>
             </form>
         </div>
     </main>
     <footer role="contentinfo">
-        <p>Already have an account? <a href="/login">Log in</a></p>
+        <p>Already have an account? <a id="already" href="/search/search.html">Log in</a></p>
     </footer>
 </body>
 </html>

@@ -1,13 +1,13 @@
 'use strict'
 
 function signup() {
-    $('form').submit(event => {
+    $('.signup').submit(event => {
         event.preventDefault()
         let first = $('#first').val()
         let last = $('#last').val()
-        let user = $('#user').val()
+        let user = $('#newuser').val()
         let email = $('#email').val() 
-        let pass = $('#pass').val();
+        let pass = $('#newpass').val();
         console.log(user)
         fetch('/users/signup', {
             method: 'POST',
@@ -24,20 +24,57 @@ function signup() {
                 })
             })
         .then(response => response.json())
-        .then(data => console.log(data))
+        .then(data => showLogin())
         .catch(err => console.error(err))
     });
 }
 
-
-function renderResponse(arr) {
-    $(".results").empty()
-    console.log(arr);
-    let sum = ``
-    for (let i=0; i < arr.length; i++) {
-        sum += `<p class="col-3"><a href=${arr[i].url}>${arr[i].name}</a><br>${arr[i].cuisines}</p>`
-    }
-    $(".results").append(sum)
+function showLogin() {
+    $('#already').click(event => {
+        event.preventDefault()
+        $('.signup').css('display', 'none')
+        $('.login').css('display', 'inline-block')
+        $('footer').empty()
+    })
 }
 
-$(signup)
+function login() {
+    $('.login').submit(event => {
+        event.preventDefault()
+        let user = $('#user').val()
+        let pass = $('#pass').val()
+
+        fetch('/auth/login', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                username: user,
+                password: pass
+            })
+        })
+        .then(function(response) {
+            if (!response.ok) {
+                throw Error(response.statusText);
+            }
+            return response.json();
+        })
+        .then(data => authorized(data))
+        .catch(err => console.error(err))
+    })
+}
+
+function authorized(data) {
+    console.log(data.authToken)
+    window.location.replace('/search/search.html')
+}
+
+
+
+$(function() {
+    signup()
+    showLogin()
+    login()
+})

@@ -4,10 +4,6 @@ body {
     font-size: 18px;
 }
 
-.logo {
-    width: 100%;
-}
-
 img {
     display: block;
     height: 220px;
@@ -27,6 +23,10 @@ main div {
 form {
     background-color: white;
     padding-top: 25px
+}
+
+.login {
+    display: none
 }
 
 h1 {
@@ -79,4 +79,8 @@ footer p {
 
 footer a:link {
     color: white
+}
+
+footer a:visited {
+    color: red
 }

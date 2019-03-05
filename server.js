@@ -28,16 +28,15 @@ passport.use(localStrategy);
 passport.use(jwtStrategy);
 
 app.use('/users', userrouter)
+app.use('/auth', authrouter)
+
+const jwtAuth = passport.authenticate('jwt', { session: false });
 
 app.get('/', function(req, res) {
   res.status(200)
 })
 
-app.get('/login', function(req, res) {
-  res.status(200)
-})
-
-app.get('/search', function(req, res) {
+app.get('/search', jwtAuth, function(req, res) {
   console.log(req.query.location)
   if (isNaN(req.query.location)) {
     //let result = cities.filter(city => {

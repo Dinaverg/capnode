@@ -38,6 +38,7 @@ userSchema.virtual("fullName").get(function() {
 userSchema.methods.serialize = function() {
     return {
       name: this.fullName,
+      username: this.username,
       beenTo: this.beenTo.length,
       toGoTo: this.toGoTo.length
     }
