@@ -60,8 +60,8 @@ app.get('/', function(req, res) {
 
 app.get('/search', jwtAuth, function(req, res) {
   console.log(req.query.location)
-  console.log(cityPop.length)
-  //let start = 0
+  //console.log(cityPop.length)
+  let start = req.query.start
   if (isNaN(req.query.location)) {
     let result = cityPop.filter(city => {
       return city.name == cases.titleCase(req.query.location)
@@ -71,7 +71,7 @@ app.get('/search', jwtAuth, function(req, res) {
       getRestaurants({
         latitude: result[0].latitude,
         longitude: result[0].longitude
-      }, res)
+      }, res, start)
       console.log('one')
       //send to poi api
     } else if (result.length == 0) {
@@ -83,7 +83,7 @@ app.get('/search', jwtAuth, function(req, res) {
       getRestaurants({
         latitude: result[0].latitude,
         longitude: result[0].longitude
-      }, res)
+      }, res, start)
       //send to poi api
     } else {
       console.log('four')
@@ -94,18 +94,17 @@ app.get('/search', jwtAuth, function(req, res) {
       getRestaurants({
         latitude: maxPop.lat,
         longitude: maxPop.lon
-      }, res)
+      }, res, start)
       //send to poi api
     }
     console.log('berf')
     //cities
   } else {
     let place = zipcodes.lookup(req.query.location)
-    console.log(res)
     getRestaurants({
       latitude: place.latitude,
       longitude: place.longitude
-    }, res) 
+    }, res, start) 
   }
 })
 
@@ -122,7 +121,7 @@ function getRestaurants(obj, res, start=0) {
 }
 
 function showRestaurantData(json, res) {
-  console.log(json.restaurants[0].restaurant)
+  //console.log(json.restaurants[0].restaurant)
   let sum = []
   for (let i = 0; i < json.restaurants.length; i++) {
     sum.push({
@@ -136,19 +135,6 @@ function showRestaurantData(json, res) {
   }
   res.send(sum)
 }
-
-/* app.get('/nextPage', function nextPage(req, res) {
-  let start = req.params.page * 20
-  let url = `https://developers.zomato.com/api/v2.1/search?lat=${obj.latitude}&lon=${obj.longitude}&start=${start}`
-  fetch(url, {
-    headers: {
-      "user-key": "5bd03d09c51a0f6f196ea401d3ae98c1"
-    }
-  })
-  .then(response => response.json())
-  .then(responseJson =>showRestaurantData(responseJson, res))
-  .catch(err => console.error(err))
-}) */
 
 let server
 
