@@ -1,7 +1,32 @@
 header {
+    margin-top: 40px;
     text-align: center
 }
 
+body {
+    background-color: cornflowerblue
+}
+
 .results {
-    display: inline
+    display: inline-block
+}
+
+p {
+    background-color: rgb(150, 177, 228);
+    background-clip: content-box
+}
+
+h2, h3 {
+    text-align: center;
+    color: darkred
+}
+
+.line {
+    height: 20%;
+}
+
+footer {
+    display: none;
+    text-align: right;
+    text-decoration: underline
 }

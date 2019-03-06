@@ -68,7 +68,7 @@ function login() {
 
 function authorized(data) {
     console.log(data.authToken)
-    window.location.replace('/search/search.html')
+    window.location.replace(`/search/search.html`)
 }
 
 
