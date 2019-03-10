@@ -1,7 +1,10 @@
 let express = require('express')
 let bodyparser = require('body-parser')
+let passport = require('passport')
+let jwt = require('jsonwebtoken')
 
 let {Restaurant, User} = require('./models')
+let {JWT_SECRET} = require('./config')
 
 let router = express.Router()
 
@@ -136,15 +139,130 @@ router.post('/signup', jsonParser, (req, res) => {
       });
   });
   
-  // Never expose all your users like below in a prod application
+let jwtAuth = passport.authenticate('jwt', {session: false});
+
+router.post('/save', [jsonParser, jwtAuth], (req, res) => {
+  console.log(req.query)
+  let been = req.query.been
+  console.log('146', been)
+  //validate
+  let requiredFields = ['name'];
+  let missingField = requiredFields.find(field => !(field in req.body));
+  if (missingField) {
+    return res.status(422).json({
+      code: 422,
+      reason: 'ValidationError',
+      message: 'Missing field',
+      location: missingField
+    });
+  }
+
+  let auth = req.header('Authorization')
+  let token = auth.split(' ')
+  let decoded = jwt.verify(token[1], JWT_SECRET)
+  let username = decoded.user.username
+  
+  let {id, name, cuisines, address, rating} = req.body
+  let rest = Restaurant.create({
+    address,
+    cuisines,
+    name,
+    rating,
+    id
+  })
+  
+  if (been == 'true') {
+    console.log('174', been)
+    User.findOneAndUpdate({username}, {$push: {beenTo: rest}})
+    .then(saved => res.status(201).json({result: `${name} has been saved to "places you've been"`}))
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({error: 'Something went wrong'});
+    });
+  } else {
+    console.log('182', been)
+    User.findOneAndUpdate({username}, {$push: {toGoTo: rest}})
+    .then(saved => res.status(201).json({result: `${name} has been saved to "places you want to go"`}))
+    .catch(err => {
+      console.error(err);
+      res.status(500).json({error: 'Something went wrong'});
+    });
+  }
+})
+
+router.get('/feed', [jsonParser, jwtAuth], (req, res) => {
+  //var q = models.Post.find({published: true}).sort({'date': -1}).limit(20);
+/*   Restaurant
+  .find()
+  .sort({'saved': -1})
+  .limit(20)
+  .then(rest => {console.log(rest); return res.status(200).send(rest)}) */
+
+  let auth = req.header('Authorization')
+  let token = auth.split(' ')
+  let decoded = jwt.verify(token[1], JWT_SECRET)
+  let username = decoded.user.username
+
+  User.aggregate([
+    {$match: {username: {$ne: username}}},
+    {$project: {'beenTo.saved': 1, 'username': 1}},
+    {$unwind: '$beenTo'},
+    //{$limit: 5},
+    {$group: {_id: '$username', sav: {$push: '$beenTo.saved'}}},
+    //{$sort: {'beenTo.saved': -1}}
+    
+  ])
+  .then(users => {console.log(users); return res.status(200).json(users.map(
+    function(user) {
+      let data = []
+      for (let i = 0; i < user.sav.length; i++) {
+        console.log('borf')
+        console.log(user.id)
+        data.push(`${user._id} ${user.sav[i]}`)
+      }
+      return data
+    }
+    ))})
+  //user._id
+  //.then(users => {console.log(users); return res.status(200).json(users.map(user => ))})
+
+/*   Instead of 
+  `Model.aggregate({ $match }, {$skip })`, do 
+  `Model.aggregate([{ $match }, { $skip }])` */
+  
+  /* User.aggregate([{$project:{'beenTo.saved': 1}}, {$unwind: '$beenTo'}, {$group: {_id: null, re: {$push: '$beenTo'}}}]) //, {$group: {_id:'a', res: {$push: 'a'}}}])
+  .then(users => {console.log(users[0].re);  return res.status(200).send(users)})  */
+
+  /* User.mapReduce(
+    function() {emit(this.username, this.beenTo, this.toGoTo.saved);},
+    function(key, values) {return values},
+    {
+      query: {$ne: {username}},
+      out: "allsaved"
+    }
+  ) */
+  //then(users => {console.log(users); return res.status(200).send(users)})
+
+  //We want to show a feed of users -other- than the current user
+  //User.where('username').ne(username).aggregate([{$unwind: '$beenTo $toGoTo'}]) //.select('username beenTo.saved toGoTo.saved')
+  //.then(users => users.group())  //.sort({'saved': -1})  //select('beenTo toGoTo')
+  //.then(users => {console.log(users); return res.status(200).send(users)})
+})
+
+/* User.find({'links.url':req.params.query}, function(err, foundUsers){
+  // ---
+}); */
+
+
+// Never expose all your users like below in a prod application
   // we're just doing this so we have a quick way to see
   // if we're creating users. keep in mind, you can also
   // verify this in the Mongo shell.
-  router.get('/', (req, res) => {
-    console.log('get users')
-    User.find()
-      .then(users => res.json(users.map(user => user.serialize())))
-      .catch(err => res.status(500).json({message: 'Internal server error'}));
-  });
-  
-  module.exports = router
+router.get('/', (req, res) => {
+  console.log('get users')
+  User.find()
+    .then(users => res.json(users.map(user => user.serialize())))
+    .catch(err => res.status(500).json({message: 'Internal server error'}));
+});
+
+module.exports = router

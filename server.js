@@ -127,7 +127,6 @@ function showRestaurantData(json, res) {
     sum.push({
       id: json.restaurants[i].restaurant.id,
       name: json.restaurants[i].restaurant.name,
-      url: json.restaurants[i].restaurant.url,
       address: json.restaurants[i].restaurant.location.address,
       cuisines: json.restaurants[i].restaurant.cuisines,
       user_rating: json.restaurants[i].restaurant.user_rating.rating_text

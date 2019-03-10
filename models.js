@@ -25,7 +25,6 @@ let userSchema = mongoose.Schema({
         type: 'string',
         required: true
     },
-    JWT: 'string',
     beenTo: [restaurantSchema],
     toGoTo: [restaurantSchema]
 })
