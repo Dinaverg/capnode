@@ -69,8 +69,8 @@ app.get('/search', jwtAuth, function(req, res) {
     let stateSet = new Set(result.map(x => x.adminCode))
     if (result.length == 1) {
       getRestaurants({
-        latitude: result[0].latitude,
-        longitude: result[0].longitude
+        latitude: result[0].lat,
+        longitude: result[0].lon
       }, res, start)
       console.log('one')
       //send to poi api

@@ -2,6 +2,7 @@ let express = require('express')
 let bodyparser = require('body-parser')
 let passport = require('passport')
 let jwt = require('jsonwebtoken')
+let flatten = require('array-flatten')
 
 let {Restaurant, User} = require('./models')
 let {JWT_SECRET} = require('./config')
@@ -205,64 +206,111 @@ router.get('/feed', [jsonParser, jwtAuth], (req, res) => {
 
   User.aggregate([
     {$match: {username: {$ne: username}}},
-    {$project: {'beenTo.saved': 1, 'username': 1}},
-    {$unwind: '$beenTo'},
+    //We want to show a feed of users -other- than the current user
+    {$lookup: {
+      from: "restaurants",
+      localField: "beenTo.saved",
+      foreignField: "saved",
+      as: "savRest"
+    }},
+    {$project: {
+      'savRest.saved': 1, 
+      'savRest.name': 1, 
+      //'username': 1,
+      'firstName': 1,
+      'lastName': 1
+    }},
     //{$limit: 5},
-    {$group: {_id: '$username', sav: {$push: '$beenTo.saved'}}},
     //{$sort: {'beenTo.saved': -1}}
-    
   ])
-  .then(users => {console.log(users); return res.status(200).json(users.map(
-    function(user) {
-      let data = []
-      for (let i = 0; i < user.sav.length; i++) {
-        console.log('borf')
-        console.log(user.id)
-        data.push(`${user._id} ${user.sav[i]}`)
+  .then(users => {
+    console.log(users); 
+    let data = [];
+    for (let j = 0; j < users.length; j++) {
+      for (let i = 0; i < users[j].savRest.length; i++) {
+        console.log(users[j].firstName)
+        data.push({
+          fullName: `${users[j].firstName} ${users[j].lastName}`,
+          saved: users[j].savRest[i].saved,
+          name: users[j].savRest[i].name
+        })
       }
-      return data
     }
-    ))})
-  //user._id
-  //.then(users => {console.log(users); return res.status(200).json(users.map(user => ))})
-
-/*   Instead of 
-  `Model.aggregate({ $match }, {$skip })`, do 
-  `Model.aggregate([{ $match }, { $skip }])` */
+    console.log(data);
+    return res.status(200).json(data)}
+  )
+  .catch(err => console.error(err))
   
   /* User.aggregate([{$project:{'beenTo.saved': 1}}, {$unwind: '$beenTo'}, {$group: {_id: null, re: {$push: '$beenTo'}}}]) //, {$group: {_id:'a', res: {$push: 'a'}}}])
   .then(users => {console.log(users[0].re);  return res.status(200).send(users)})  */
-
-  /* User.mapReduce(
-    function() {emit(this.username, this.beenTo, this.toGoTo.saved);},
-    function(key, values) {return values},
-    {
-      query: {$ne: {username}},
-      out: "allsaved"
-    }
-  ) */
-  //then(users => {console.log(users); return res.status(200).send(users)})
-
-  //We want to show a feed of users -other- than the current user
+  
   //User.where('username').ne(username).aggregate([{$unwind: '$beenTo $toGoTo'}]) //.select('username beenTo.saved toGoTo.saved')
   //.then(users => users.group())  //.sort({'saved': -1})  //select('beenTo toGoTo')
-  //.then(users => {console.log(users); return res.status(200).send(users)})
 })
 
-/* User.find({'links.url':req.params.query}, function(err, foundUsers){
-  // ---
-}); */
+router.get('/profile', jwtAuth, (req, res) => {
+  let auth = req.header('Authorization')
+  let token = auth.split(' ')
+  let decoded = jwt.verify(token[1], JWT_SECRET)
+  let username = decoded.user.username
 
+  User.aggregate([
+    {$match: {username: username}},
+    {$lookup: {
+      from: "restaurants",
+      localField: "beenTo.saved",
+      foreignField: "saved",
+      as: "savRest"
+    }},
+    {$lookup: {
+      from: "restaurants",
+      localField: "toGoTo.saved",
+      foreignField: "saved",
+      as: "newRest"
+    }},
+    {$project: {
+      'savRest.saved': 1, 
+      'savRest.name': 1, 
+      //'username': 1,
+      //'firstName': 1,
+      //'lastName': 1,
+      'newRest.saved': 1,
+      'newRest.name': 1
+    }}
+  ])
+  .then(user => {
+    console.log(user[0]); 
+    let data = []
+    for (let i = 0; i < user[0].savRest.length; i++) {
+      data.push({
+        been: true,
+        //fullName: `${user[0].firstName} ${user[0].lastName}`,
+        saved: user[0].savRest[i].saved,
+        name: user[0].savRest[i].name
+      })
+    }
+    for (let j = 0; j < user[0].newRest.length; j++) {
+      data.push({
+        been: false,
+        //fullName: `${user[0].firstName} ${user[0].lastName}`,
+        saved: user[0].newRest[j].saved,
+        name: user[0].newRest[j].name
+      })
+    }
+    return res.status(200).json(data)
+  })
+  .catch(err => console.error(err))
+})
 
 // Never expose all your users like below in a prod application
   // we're just doing this so we have a quick way to see
   // if we're creating users. keep in mind, you can also
   // verify this in the Mongo shell.
-router.get('/', (req, res) => {
+/* router.get('/', (req, res) => {
   console.log('get users')
   User.find()
     .then(users => res.json(users.map(user => user.serialize())))
     .catch(err => res.status(500).json({message: 'Internal server error'}));
-});
+}); */
 
 module.exports = router

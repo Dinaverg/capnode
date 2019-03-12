@@ -18,6 +18,7 @@
   "homepage": "https://github.com/Dinaverg/capnode#readme",
   "dependencies": {
     "all-the-cities": "^2.0.1",
+    "array-flatten": "^2.1.2",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.18.3",
     "change-case": "^3.1.0",
