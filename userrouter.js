@@ -192,13 +192,6 @@ router.post('/save', [jsonParser, jwtAuth], (req, res) => {
 })
 
 router.get('/feed', [jsonParser, jwtAuth], (req, res) => {
-  //var q = models.Post.find({published: true}).sort({'date': -1}).limit(20);
-/*   Restaurant
-  .find()
-  .sort({'saved': -1})
-  .limit(20)
-  .then(rest => {console.log(rest); return res.status(200).send(rest)}) */
-
   let auth = req.header('Authorization')
   let token = auth.split(' ')
   let decoded = jwt.verify(token[1], JWT_SECRET)
@@ -237,15 +230,9 @@ router.get('/feed', [jsonParser, jwtAuth], (req, res) => {
       }
     }
     console.log(data);
-    return res.status(200).json(data)}
-  )
+    return res.status(200).json(data)
+  })
   .catch(err => console.error(err))
-  
-  /* User.aggregate([{$project:{'beenTo.saved': 1}}, {$unwind: '$beenTo'}, {$group: {_id: null, re: {$push: '$beenTo'}}}]) //, {$group: {_id:'a', res: {$push: 'a'}}}])
-  .then(users => {console.log(users[0].re);  return res.status(200).send(users)})  */
-  
-  //User.where('username').ne(username).aggregate([{$unwind: '$beenTo $toGoTo'}]) //.select('username beenTo.saved toGoTo.saved')
-  //.then(users => users.group())  //.sort({'saved': -1})  //select('beenTo toGoTo')
 })
 
 router.get('/profile', jwtAuth, (req, res) => {

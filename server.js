@@ -60,7 +60,6 @@ app.get('/', function(req, res) {
 
 app.get('/search', jwtAuth, function(req, res) {
   console.log(req.query.location)
-  //console.log(cityPop.length)
   let start = req.query.start
   if (isNaN(req.query.location)) {
     let result = cityPop.filter(city => {
@@ -140,7 +139,7 @@ let server
 function runServer() {
   const port = process.env.PORT || 8080;
   return new Promise((resolve, reject) => {
-    mongoose.set('debug', true);
+    //mongoose.set('debug', true);
     mongoose.connect(DATABASE_URL, {useNewUrlParser: true}, err => {
       if (err) {
         return reject(err)
