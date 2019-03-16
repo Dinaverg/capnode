@@ -102,7 +102,7 @@ router.post('/signup', jsonParser, (req, res) => {
     User.find({username})
       .countDocuments()
       .then(count => {
-        console.log(count)
+        //console.log(count)
         if (count > 0) {
           // There is an existing user with the same username
           return Promise.reject({
@@ -116,7 +116,7 @@ router.post('/signup', jsonParser, (req, res) => {
         return User.hashPassword(password);
       })
       .then(hash => {
-        console.log(hash)
+        console.log('119', hash)
         return User.create({
           username,
           password: hash,
@@ -126,7 +126,7 @@ router.post('/signup', jsonParser, (req, res) => {
         });
       })
       .then(user => {
-        console.log(user)
+        console.log('129', user)
         return res.status(201).json(user.serialize());
       })
       .catch(err => {
@@ -143,9 +143,8 @@ router.post('/signup', jsonParser, (req, res) => {
 let jwtAuth = passport.authenticate('jwt', {session: false});
 
 router.post('/save', [jsonParser, jwtAuth], (req, res) => {
-  console.log(req.query)
+  console.log('146', req.body)
   let been = req.query.been
-  console.log('146', been)
   //validate
   let requiredFields = ['name'];
   let missingField = requiredFields.find(field => !(field in req.body));

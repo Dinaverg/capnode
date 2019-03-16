@@ -11,7 +11,7 @@ let morgan = require('morgan')
 let passport = require('passport')
 let cases = require('change-case')
 
-let {DATABASE_URL} = require('./config');
+let {DATABASE_URL, PORT} = require('./config');
 let userrouter = require('./userrouter');
 let {router: authrouter, localStrategy, jwtStrategy } = require('./auth');
 
@@ -136,16 +136,16 @@ function showRestaurantData(json, res) {
 
 let server
 
-function runServer() {
-  const port = process.env.PORT || 8080;
+function runServer(databaseUrl, port = 80) {
+  //let port = process.env.PORT || 8080;
   return new Promise((resolve, reject) => {
     //mongoose.set('debug', true);
-    mongoose.connect(DATABASE_URL, {useNewUrlParser: true}, err => {
+    mongoose.connect(databaseUrl, {useNewUrlParser: true}, err => {
       if (err) {
         return reject(err)
       }
     })
-    console.log(`connected to database at ${DATABASE_URL}`)
+    console.log(`connected to database at ${databaseUrl}`)
     server = app
     .listen(port, () => {
       console.log(`Your app is listening on port ${port}`);

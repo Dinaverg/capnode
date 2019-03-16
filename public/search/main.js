@@ -69,17 +69,6 @@ function nextPage(query) {
     })
 }
 
-/* function testSave() {
-    $(".results").on("click", ".save", function() {
-        console.log(JSON.stringify({
-            id: $(this).parent().parent().parent().find(".id").text(),
-            name: $(this).parent().parent().parent().find(".name").text(),
-            cuisines: $(this).parent().parent().parent().find(".cuisines").text(),
-            address: $(this).parent().parent().parent().find(".address").text(),
-            rating: $(this).parent().parent().parent().find(".rating").text()}))
-    })
-}
- */
 function save() {
     $(".results").on("click", ".save", function() {
         let options = {
