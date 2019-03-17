@@ -208,7 +208,7 @@ describe('endpoints', function() {
         it('should give results when searching by city', function() {
             let res
             this.timeout(5000)
-            let city = random.city('USA')
+            let city = random.city('United States of America')
             return chai.request(app)
             .get(`/search?location=${city}`)
             .set('Authorization', `Bearer ${token}`)

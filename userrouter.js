@@ -37,14 +37,7 @@ router.post('/signup', jsonParser, (req, res) => {
         location: nonStringField
       });
     }
-  
-    // If the username and password aren't trimmed we give an error.  Users might
-    // expect that these will work without trimming (i.e. they want the password
-    // "foobar ", including the space at the end).  We need to reject such values
-    // explicitly so the users know what's happening, rather than silently
-    // trimming them and expecting the user to understand.
-    // We'll silently trim the other fields, because they aren't credentials used
-    // to log in, so it's less of a problem.
+
     const explicityTrimmedFields = ['username', 'password'];
     const nonTrimmedField = explicityTrimmedFields.find(
       field => req.body[field].trim() !== req.body[field]

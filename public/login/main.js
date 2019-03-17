@@ -8,7 +8,6 @@ function signup() {
         let user = $('#newuser').val()
         let email = $('#email').val() 
         let pass = $('#newpass').val();
-        console.log(user)
         fetch('/users/signup', {
             method: 'POST',
             headers: {
@@ -23,10 +22,28 @@ function signup() {
                 password: pass
                 })
             })
-        .then(response => response.json())
-        .then(data => showLogin())
+        .then(response => {
+            if (response.ok) {
+                return response.json()
+            } else if (response.status == 422) {
+                return validationError(response)
+            } 
+            throw new Error(response.statusText)
+        })
+        .then(data => signupSuccess())
         .catch(err => console.error(err))
     });
+}
+
+function validationError(obj) {
+    //toasts?
+    console.log(obj)
+}
+
+function signupSuccess() {
+    $('.signup').css('display', 'none')
+    $('.login').css('display', 'inline-block')
+    $('footer').html('<p><a href="">Sign up instead</a></p>')
 }
 
 function showLogin() {
@@ -34,7 +51,7 @@ function showLogin() {
         event.preventDefault()
         $('.signup').css('display', 'none')
         $('.login').css('display', 'inline-block')
-        $('footer').empty()
+        $('footer').html('<p><a href="">Sign up instead</a></p>')
     })
 }
 

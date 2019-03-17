@@ -29,16 +29,6 @@ let userSchema = mongoose.Schema({
     toGoTo: [restaurantSchema]
 })
 
-/* userSchema.pre('find', function(next) {
-  this.populate('beenTo');
-  next();
-});
-
-userSchema.pre('aggerate', function(next) {
-  this.populate('restaurant');
-  next();
-}) */
-
 userSchema.virtual("fullName").get(function() {
     console.log(this)
   return `${this.firstName} ${this.lastName}`.trim()

@@ -120,7 +120,6 @@ function getRestaurants(obj, res, start=0) {
 }
 
 function showRestaurantData(json, res) {
-  //console.log(json.restaurants[0].restaurant)
   let sum = []
   for (let i = 0; i < json.restaurants.length; i++) {
     sum.push({
@@ -136,10 +135,9 @@ function showRestaurantData(json, res) {
 
 let server
 
-function runServer(databaseUrl, port = 80) {
-  //let port = process.env.PORT || 8080;
+function runServer(databaseUrl) {
+  let port = process.env.PORT || 8080;
   return new Promise((resolve, reject) => {
-    //mongoose.set('debug', true);
     mongoose.connect(databaseUrl, {useNewUrlParser: true}, err => {
       if (err) {
         return reject(err)
