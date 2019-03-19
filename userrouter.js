@@ -165,7 +165,6 @@ router.post('/save', [jsonParser, jwtAuth], (req, res) => {
   })
   
   if (been == 'true') {
-    console.log('174', been)
     User.findOneAndUpdate({username}, {$push: {beenTo: rest}})
     .then(saved => res.status(201).json({result: `${name} has been saved to "places you've been"`}))
     .catch(err => {
@@ -173,7 +172,6 @@ router.post('/save', [jsonParser, jwtAuth], (req, res) => {
       res.status(500).json({error: 'Something went wrong'});
     });
   } else {
-    console.log('182', been)
     User.findOneAndUpdate({username}, {$push: {toGoTo: rest}})
     .then(saved => res.status(201).json({result: `${name} has been saved to "places you want to go"`}))
     .catch(err => {
@@ -281,15 +279,40 @@ router.get('/profile', jwtAuth, (req, res) => {
   .catch(err => console.error(err))
 })
 
-// Never expose all your users like below in a prod application
-  // we're just doing this so we have a quick way to see
-  // if we're creating users. keep in mind, you can also
-  // verify this in the Mongo shell.
-/* router.get('/', (req, res) => {
-  console.log('get users')
-  User.find()
-    .then(users => res.json(users.map(user => user.serialize())))
-    .catch(err => res.status(500).json({message: 'Internal server error'}));
-}); */
+router.put('/update', jwtAuth, function() {
+  let auth = req.header('Authorization')
+  let token = auth.split(' ')
+  let decoded = jwt.verify(token[1], JWT_SECRET)
+  let username = decoded.user.username
+
+  User.findOneAndUpdate(
+    {username},
+
+  )
+
+})
+
+router.delete('/delete', jwtAuth, (req, res) => {
+  let auth = req.header('Authorization')
+  let token = auth.split(' ')
+  let decoded = jwt.verify(token[1], JWT_SECRET)
+  let username = decoded.user.username
+  console.log('300', 'woop')
+  Restaurant.findOne({name: req.query.name})
+  .then(function(rest) {
+    console.log('100', rest);
+    return Restaurant.findByIdAndDelete(rest._id)
+  })
+  .then(() => res.status(202).json('deleted'))
+  /* .then(function(rest) {
+    Restaurant.deleteOne(rest)
+  }) */
+})
+
+  /*;
+    return User.findOneAndUpdate(
+      {username}, 
+      {$pull: {beenTo: rest._id}}
+    )*/
 
 module.exports = router

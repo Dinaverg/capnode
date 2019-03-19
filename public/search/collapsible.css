@@ -1,8 +1,10 @@
 .collapsible {
-    background-color: #FF8375;
-    color: #444;
+    background-color: rgb(146, 178, 236);
+    color: #000;
     cursor: pointer;
     padding: 18px;
+    padding-bottom: 0px;
+    margin-bottom: 0px;
     border: none;
     text-align: left;
     outline: none;
@@ -18,7 +20,7 @@
     padding: 0 18px;
     display: none;
     overflow: hidden;
-    background-color: #FFEC92;
+    /* background-color: #FFEC92; */
     transition: max-height 0.2s ease-out;
 } 
 

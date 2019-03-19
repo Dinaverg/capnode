@@ -4,17 +4,34 @@ header form {
 }
 
 header nav {
-    background-color: grey
+    background-color: rgb(173, 173, 173)
 }
 
 ul {
     list-style-type: none;
+    text-align: center;
     margin: 0;
     padding: 0;
+}
+
+li {
+    display: inline-block;
+}
+
+nav a {
+    text-decoration: none;
+    color: #fff;
   }
 
+nav a:hover {
+    background-color: #005f5f;
+    transition: .3s background-color;
+}
+
 body {
-    background-color: cornflowerblue
+    font-family: "Roboto Mono", monospace;
+    font-size: 2vh;
+    /* background-color: cornflowerblue */
 }
 
 .results {
@@ -24,6 +41,23 @@ body {
 p {
     background-color: rgb(150, 177, 228);
     background-clip: content-box
+}
+
+.content p {
+    margin-top: 0px
+}
+
+.name {
+    font-size: 3vh
+}
+
+.been, .togo {
+    color: #fff
+}
+
+.been:hover, .togo:hover {
+    background-color: rgb(95, 140, 223);
+    transition: .3s background-color;
 }
 
 .id {
@@ -36,12 +70,15 @@ h2, h3 {
 }
 
 .line {
-    height: 20%;
+    height: 20%; 
 }
 
 footer {
     display: none;
-    text-align: right;
+    padding-top: 20px;
+    margin-right: 0px;
+    margin-left: auto;
+    /* text-align: right; */
     text-decoration: underline
 }
 

@@ -137,6 +137,7 @@ let server
 
 function runServer(databaseUrl) {
   let port = process.env.PORT || 8080;
+  mongoose.set('debug', true);
   return new Promise((resolve, reject) => {
     mongoose.connect(databaseUrl, {useNewUrlParser: true}, err => {
       if (err) {

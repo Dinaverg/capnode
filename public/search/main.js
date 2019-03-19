@@ -27,10 +27,12 @@ function searchPOI() {
 }
 
 function renderAuthError() {
+    $(".results").empty()
     $(".results").append(`<h2>Unauthorized. Have you logged in properly? <a href="/login/login.html">Login</a><h2>`)
 }
 
 function badRequest() {
+    $(".results").empty()
     $(".results").append(`<h3>Bad Request. For cities, use full names (e.g. New York City, not just New York), or use a zipcode instead`)
 }
 
@@ -40,7 +42,7 @@ function renderResponse(arr) {
     let sum = ``
     for (let i=0; i < arr.length; i++) {
         sum += `<div class="collapsible-container col-3"><p class="collapsible"><span class="id">${arr[i].id}</span><span class="name">${arr[i].name}</span><br><span class="cuisines">${arr[i].cuisines}</span></p>
-        <div class="content"><p><span class="address">${arr[i].address}</span><br><span class="rating">${arr[i].user_rating}</span><br>
+        <div class="content"><p><span class="address">${arr[i].address}</span><br><span class="rating">Rating: ${arr[i].user_rating}</span><br>
         <span class="save been">I've been here</span><br><span class="save togo">I want to go here</save></p></div></div>`
     }
     $(".results").append(sum)
@@ -66,6 +68,7 @@ function nextPage(query) {
         })
         .then(responseJson => renderResponse(responseJson))
         .catch(error => console.log(error))
+        document.body.scrollTop = document.documentElement.scrollTop = 0;
     })
 }
 
@@ -111,7 +114,7 @@ function save() {
 function collapsible() {
     $(".results").on("click", ".collapsible", function() {
         $(".active").removeClass("active")
-        $(this).parent().toggleClass("active"); 
+        $(this).parent().addClass("active")    
     });
 }
 
