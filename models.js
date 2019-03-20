@@ -29,8 +29,6 @@ let userSchema = mongoose.Schema({
     toGoTo: [restaurantSchema]
 })
 
-//userSchema.
-
 userSchema.virtual("fullName").get(function() {
     console.log(this)
   return `${this.firstName} ${this.lastName}`.trim()

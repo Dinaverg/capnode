@@ -1,9 +1,5 @@
-let path = require('path');
 let express = require('express');
-let uuid = require('uuid/v4')
-let exSession = require('express-session')
 let zipcodes = require('zipcodes')
-let cities = require('cities')
 let cityPop = require('all-the-cities')
 let fetch = require('node-fetch')
 let mongoose = require('mongoose')
@@ -21,33 +17,9 @@ let app = express();
 
 app.use(morgan('common'))
 app.use(express.static('public'));
-/* app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
-}); */
-//app.use(express.cookieParser())
-/* app.use(exSession({
-  genid: (req) => {
-    console.log('Inside the session middleware')
-    console.log(req.sessionID)
-    return uuid() // use UUIDs for session IDs
-  },
-  secret: 'keyboard cat',
-  resave: false,
-  saveUninitialized: true
-})) */
-//{ secret: 'iago', maxAge:null }))
-//app.use(passport.initialize())
-//app.use(passport.session())
 
 passport.use(localStrategy);
 passport.use(jwtStrategy);
-
-/* passport.serializeUser((user, done) => {
-  console.log(user)
-  done(null, user.username)
-}) */
 
 app.use('/users', userrouter)
 app.use('/auth', authrouter)
@@ -96,8 +68,6 @@ app.get('/search', jwtAuth, function(req, res) {
       }, res, start)
       //send to poi api
     }
-    console.log('berf')
-    //cities
   } else {
     let place = zipcodes.lookup(req.query.location)
     getRestaurants({
