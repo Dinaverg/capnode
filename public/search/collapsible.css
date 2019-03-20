@@ -20,7 +20,6 @@
     padding: 0 18px;
     display: none;
     overflow: hidden;
-    /* background-color: #FFEC92; */
     transition: max-height 0.2s ease-out;
 } 
 

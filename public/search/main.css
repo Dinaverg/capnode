@@ -31,7 +31,6 @@ nav a:hover {
 body {
     font-family: "Roboto Mono", monospace;
     font-size: 2vh;
-    /* background-color: cornflowerblue */
 }
 
 .results {
@@ -78,7 +77,6 @@ footer {
     padding-top: 20px;
     margin-right: 0px;
     margin-left: auto;
-    /* text-align: right; */
     text-decoration: underline
 }
 

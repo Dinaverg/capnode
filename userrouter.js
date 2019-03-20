@@ -2,7 +2,6 @@ let express = require('express')
 let bodyparser = require('body-parser')
 let passport = require('passport')
 let jwt = require('jsonwebtoken')
-let flatten = require('array-flatten')
 
 let {Restaurant, User} = require('./models')
 let {JWT_SECRET} = require('./config')
@@ -202,7 +201,6 @@ router.get('/feed', [jsonParser, jwtAuth], (req, res) => {
     {$project: {
       'savRest.saved': 1, 
       'savRest.name': 1, 
-      //'username': 1,
       'firstName': 1,
       'lastName': 1
     }},
@@ -210,7 +208,6 @@ router.get('/feed', [jsonParser, jwtAuth], (req, res) => {
     //{$sort: {'beenTo.saved': -1}}
   ])
   .then(users => {
-    //console.log(users); 
     let data = [];
     for (let j = 0; j < users.length; j++) {
       for (let i = 0; i < users[j].savRest.length; i++) {
@@ -222,7 +219,6 @@ router.get('/feed', [jsonParser, jwtAuth], (req, res) => {
         })
       }
     }
-    //console.log(data);
     return res.status(200).json(data)
   })
   .catch(err => console.error(err))
@@ -253,21 +249,16 @@ router.get('/profile', jwtAuth, (req, res) => {
     {$project: {
       'savRest.saved': 1, 
       'savRest.name': 1, 
-      //'username': 1,
-      //'firstName': 1,
-      //'lastName': 1,
       'newRest.saved': 1,
       'newRest.name': 1
     }}
   ])
-//  .then(user => console.log(user))
   .then(user => {
     console.log(user[0]); 
     let data = []
     for (let i = 0; i < user[0].savRest.length; i++) {
       data.push({
         been: true,
-        //fullName: `${user[0].firstName} ${user[0].lastName}`,
         saved: user[0].savRest[i].saved,
         name: user[0].savRest[i].name
       })
@@ -279,7 +270,6 @@ router.get('/profile', jwtAuth, (req, res) => {
       } else {
         data.push({
           been: false,
-          //fullName: `${user[0].firstName} ${user[0].lastName}`,
           saved: user[0].newRest[j].saved,
           name: user[0].newRest[j].name
         })
@@ -298,7 +288,6 @@ router.put('/update', [jsonParser, jwtAuth], function(req, res) {
 
   Restaurant.findOne({name: req.query.name})
   .then(function(rest) {
-    console.log('100', rest._id)
     return rest;
   })
   .then(function(rest) {
@@ -308,7 +297,7 @@ router.put('/update', [jsonParser, jwtAuth], function(req, res) {
     {$pull: {toGoTo: rest}}
     )
   })
-  .then(() => res.status(201).json('updated'))
+  .then(() => res.status(201).send('updated'))
 })
 
 router.delete('/delete', [jsonParser, jwtAuth], (req, res) => {
@@ -316,10 +305,8 @@ router.delete('/delete', [jsonParser, jwtAuth], (req, res) => {
   let token = auth.split(' ')
   let decoded = jwt.verify(token[1], JWT_SECRET)
   let username = decoded.user.username
-  console.log('300', 'woop')
   Restaurant.findOne({name: req.query.name})
   .then(function(rest) {
-    console.log('100', rest);
     return Restaurant.findByIdAndDelete(rest._id)
   })
   .then(() => res.status(204).send('deleted'))

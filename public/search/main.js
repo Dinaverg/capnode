@@ -7,7 +7,7 @@ function searchPOI() {
         let start = 0
         let cookies = document.cookie.split('=')
         jwt = cookies[1]
-        //global
+        //global?
         let options = {headers: {'Authorization': `Bearer ${jwt}`}}
         fetch(`/search?location=${query}&start=${start}`, options)
         .then(response => {
