@@ -164,15 +164,16 @@ router.post('/save', [jsonParser, jwtAuth], (req, res) => {
     id
   })
   
+  
   if (been == 'true') {
-    User.findOneAndUpdate({username}, {$push: {beenTo: rest}})
+    User.findOneAndUpdate({username}, {$push: {beenTo: rest._id}})
     .then(saved => res.status(201).json({result: `${name} has been saved to "places you've been"`}))
     .catch(err => {
       console.error(err);
       res.status(500).json({error: 'Something went wrong'});
     });
   } else {
-    User.findOneAndUpdate({username}, {$push: {toGoTo: rest}})
+    User.findOneAndUpdate({username}, {$push: {toGoTo: rest._id}})
     .then(saved => res.status(201).json({result: `${name} has been saved to "places you want to go"`}))
     .catch(err => {
       console.error(err);
@@ -207,7 +208,7 @@ router.get('/feed', [jsonParser, jwtAuth], (req, res) => {
     //{$sort: {'beenTo.saved': -1}}
   ])
   .then(users => {
-    console.log(users); 
+    //console.log(users); 
     let data = [];
     for (let j = 0; j < users.length; j++) {
       for (let i = 0; i < users[j].savRest.length; i++) {
@@ -219,7 +220,7 @@ router.get('/feed', [jsonParser, jwtAuth], (req, res) => {
         })
       }
     }
-    console.log(data);
+    //console.log(data);
     return res.status(200).json(data)
   })
   .catch(err => console.error(err))
@@ -230,6 +231,8 @@ router.get('/profile', jwtAuth, (req, res) => {
   let token = auth.split(' ')
   let decoded = jwt.verify(token[1], JWT_SECRET)
   let username = decoded.user.username
+
+
 
   User.aggregate([
     {$match: {username: username}},
@@ -255,6 +258,7 @@ router.get('/profile', jwtAuth, (req, res) => {
       'newRest.name': 1
     }}
   ])
+//  .then(user => console.log(user))
   .then(user => {
     console.log(user[0]); 
     let data = []
@@ -267,12 +271,17 @@ router.get('/profile', jwtAuth, (req, res) => {
       })
     }
     for (let j = 0; j < user[0].newRest.length; j++) {
-      data.push({
-        been: false,
-        //fullName: `${user[0].firstName} ${user[0].lastName}`,
-        saved: user[0].newRest[j].saved,
-        name: user[0].newRest[j].name
-      })
+      let x = user[0].newRest[j]
+      if (user[0].savRest.some(obj => obj.name == x.name)) {
+        console.log('birf')
+      } else {
+        data.push({
+          been: false,
+          //fullName: `${user[0].firstName} ${user[0].lastName}`,
+          saved: user[0].newRest[j].saved,
+          name: user[0].newRest[j].name
+        })
+      }
     }
     return res.status(200).json(data)
   })

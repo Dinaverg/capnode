@@ -25,9 +25,11 @@ let userSchema = mongoose.Schema({
         type: 'string',
         required: true
     },
-    beenTo: [restaurantSchema],
-    toGoTo: [restaurantSchema]
+    beenTo: [{type: mongoose.Schema.Types.ObjectId, ref: "Restaurant"}],
+    toGoTo: [{type: mongoose.Schema.Types.ObjectId, ref: "Restaurant"}]
 })
+
+//userSchema.
 
 userSchema.virtual("fullName").get(function() {
     console.log(this)
