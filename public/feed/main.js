@@ -79,8 +79,10 @@ function updateRestaurant() {
         headers: {'Authorization': `Bearer ${jwt}`},
     }
     $(".profile").on('click', '.update', function() {
-        let name =  $(this).parent().find('.name')
+        let name =  $(this).parent().find('.name').text()
         fetch(`/users/update?name=${name}`, options)
+        makeToast('updated')
+        $(this).parent().html(`You said you've been to <span class="name">${name}</span>. <span class="delete">Delete</span>`)
     })
 }
 
@@ -94,12 +96,21 @@ function deleteRestaurant() {
     $('.profile').on('click', '.delete', function() {
         let name =  $(this).parent().find('.name').text()
         fetch(`/users/delete?name=${name}`, options)
-        .then(response => response.json())
-        .then(data => console.log(data))
+        makeToast('deleted')
         $(this).parent().css('display', 'none')
     })
-    
-    
+}
+
+function makeToast(data) {
+    $('.toaster').empty()
+    $('.toaster').append(`<div id="toast">${data}</div>`)
+    launch_toast()
+}
+
+function launch_toast() {
+    var x = document.getElementById("toast")
+    x.className = "show";
+    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 5000);
 }
 
 $(function() {

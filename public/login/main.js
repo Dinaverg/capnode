@@ -36,7 +36,7 @@ function signup() {
 }
 
 function validationError(obj) {
-    //toasts?
+    makeToast(obj.status)
     console.log(obj)
 }
 
@@ -88,7 +88,17 @@ function authorized(data) {
     window.location.replace(`/search/search.html`)
 }
 
+function makeToast(data) {
+    $('.toaster').empty()
+    $('.toaster').append(`<div id="toast">${data}</div>`)
+    launch_toast()
+}
 
+function launch_toast() {
+    var x = document.getElementById("toast")
+    x.className = "show";
+    setTimeout(function(){ x.className = x.className.replace("show", ""); }, 5000);
+}
 
 $(function() {
     signup()

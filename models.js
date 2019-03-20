@@ -25,8 +25,8 @@ let userSchema = mongoose.Schema({
         type: 'string',
         required: true
     },
-    beenTo: [{type: mongoose.Schema.Types.ObjectId, ref: "Restaurant"}],
-    toGoTo: [{type: mongoose.Schema.Types.ObjectId, ref: "Restaurant"}]
+    beenTo: [restaurantSchema],
+    toGoTo: [restaurantSchema]
 })
 
 //userSchema.

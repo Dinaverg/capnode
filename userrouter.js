@@ -166,14 +166,16 @@ router.post('/save', [jsonParser, jwtAuth], (req, res) => {
   
   
   if (been == 'true') {
-    User.findOneAndUpdate({username}, {$push: {beenTo: rest._id}})
+    console.log(been)
+    User.findOneAndUpdate({username}, {$push: {beenTo: rest}})
     .then(saved => res.status(201).json({result: `${name} has been saved to "places you've been"`}))
     .catch(err => {
       console.error(err);
       res.status(500).json({error: 'Something went wrong'});
     });
   } else {
-    User.findOneAndUpdate({username}, {$push: {toGoTo: rest._id}})
+    console.log(been)
+    User.findOneAndUpdate({username}, {$push: {toGoTo: rest}})
     .then(saved => res.status(201).json({result: `${name} has been saved to "places you want to go"`}))
     .catch(err => {
       console.error(err);
@@ -288,20 +290,28 @@ router.get('/profile', jwtAuth, (req, res) => {
   .catch(err => console.error(err))
 })
 
-router.put('/update', jwtAuth, function() {
+router.put('/update', [jsonParser, jwtAuth], function(req, res) {
   let auth = req.header('Authorization')
   let token = auth.split(' ')
   let decoded = jwt.verify(token[1], JWT_SECRET)
   let username = decoded.user.username
 
-  User.findOneAndUpdate(
-    {username},
-
-  )
-
+  Restaurant.findOne({name: req.query.name})
+  .then(function(rest) {
+    console.log('100', rest._id)
+    return rest;
+  })
+  .then(function(rest) {
+    User.findOneAndUpdate(
+    {username: username},
+    {$addToSet: {beenTo: rest}},
+    {$pull: {toGoTo: rest}}
+    )
+  })
+  .then(() => res.status(201).json('updated'))
 })
 
-router.delete('/delete', jwtAuth, (req, res) => {
+router.delete('/delete', [jsonParser, jwtAuth], (req, res) => {
   let auth = req.header('Authorization')
   let token = auth.split(' ')
   let decoded = jwt.verify(token[1], JWT_SECRET)
@@ -312,16 +322,7 @@ router.delete('/delete', jwtAuth, (req, res) => {
     console.log('100', rest);
     return Restaurant.findByIdAndDelete(rest._id)
   })
-  .then(() => res.status(202).json('deleted'))
-  /* .then(function(rest) {
-    Restaurant.deleteOne(rest)
-  }) */
+  .then(() => res.status(204).send('deleted'))
 })
-
-  /*;
-    return User.findOneAndUpdate(
-      {username}, 
-      {$pull: {beenTo: rest._id}}
-    )*/
 
 module.exports = router
