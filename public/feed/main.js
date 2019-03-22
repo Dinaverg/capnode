@@ -66,7 +66,7 @@ function renderFeed(arr) {
         sum += `<div class="feedEntry">${arr[i].fullName} has been to ${arr[i].name}</div>`
     }
     if (sum != '') {
-        $(".where").css("display", "block")
+        $(".where").css("display", "inline-block")
     }
     $(".feed").append(sum)
 }

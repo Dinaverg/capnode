@@ -4,7 +4,7 @@ header form {
 }
 
 header nav {
-    background-color: rgb(173, 173, 173)
+    background-color: rgb(118, 118, 118)
 }
 
 ul {
@@ -16,6 +16,10 @@ ul {
 
 li {
     display: inline-block;
+}
+
+img {
+    height: 24px;
 }
 
 nav a {
@@ -31,10 +35,17 @@ nav a:hover {
 body {
     font-family: "Roboto Mono", monospace;
     font-size: 2vh;
+    background-color: cornflowerblue
 }
 
 .results {
-    display: inline-block
+    display: inline-block;
+    
+}
+
+.collapsible-container {
+    background-color: #fff;
+    margin: 5px;
 }
 
 p {
@@ -57,6 +68,7 @@ p {
 .been:hover, .togo:hover {
     background-color: rgb(95, 140, 223);
     transition: .3s background-color;
+    cursor: pointer;
 }
 
 .id {

@@ -73,7 +73,9 @@ function login() {
             })
         })
         .then(function(response) {
-            if (!response.ok) {
+            if (response.status == 401) {
+                validationError(response)
+            } else if (!response.ok) {
                 throw Error(response.statusText);
             }
             return response.json();
