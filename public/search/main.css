@@ -44,8 +44,9 @@ body {
 }
 
 .collapsible-container {
-    background-color: #fff;
+    background-color: #ffdc92;
     margin: 5px;
+    border-radius: 15px 15px 0px 0px
 }
 
 p {

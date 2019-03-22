@@ -72,7 +72,7 @@ nav a:hover {
 .feedEntry {
     border: rgb(194, 212, 247) 3px groove;
     background-color: rgb(181, 196, 223);
-    border-radius: 10%;
+    border-radius: 15px;
     padding: 15px;
     margin-bottom: 5px;
 }
