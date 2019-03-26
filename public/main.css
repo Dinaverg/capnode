@@ -1,0 +1,20 @@
+body {
+    background-color: cornflowerblue;
+    font-family: 'Roboto Mono', monospace
+}
+
+.eat {
+    float: left; 
+    clear: left;
+    max-width: 320px;
+    margin: 0 15px 0 0;
+}
+
+.text {
+    font-size: 20px;
+    max-width: 900px;
+}
+
+a {
+    color: #fff;
+}
